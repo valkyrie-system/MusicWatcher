@@ -1,5 +1,7 @@
 # MusicWatcher
 
+![MusicWatcher Logo](MusicWatcher.png)
+
 **MusicWatcher** is a comprehensive music library management tool that scans your local collection, categorizes it, and helps you discover new releases from your favorite artists.
 
 It features a threaded, non-blocking GUI, integration with [MusicBrainz](https://musicbrainz.org), a framework for lyric fetching, and P2P client integration for discovering new music.
