@@ -8,7 +8,7 @@ It features a threaded, non-blocking GUI, integration with [MusicBrainz](https:/
 
 ## Core Features
 
-### Library Scanning
+### Library Scanning 
 - Recursively scans your music directory for `.mp3`, `.flac`, `.m4a`, and `.ogg` files.
 - **Intelligent Resume:** Stop and resume scans from the last file processed.
 - **File Hashing:** Generates and stores SHA256 hashes in `.musicwatcher/directory-hash.json`.
