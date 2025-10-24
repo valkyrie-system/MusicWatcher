@@ -1,183 +1,167 @@
-MusicWatcher
+# MusicWatcher
 
-MusicWatcher is a comprehensive music library management tool designed to scan your local collection, categorize it, and help you discover new releases from your favorite artists.
+**MusicWatcher** is a comprehensive music library management tool that scans your local collection, categorizes it, and helps you discover new releases from your favorite artists.
 
-It features a threaded, non-blocking GUI, integration with MusicBrainz for release data, a framework for lyric fetching, and integration with P2P clients for finding new music.
+It features a threaded, non-blocking GUI, integration with [MusicBrainz](https://musicbrainz.org), a framework for lyric fetching, and P2P client integration for discovering new music.
 
-Core Features
+---
 
-Library Scanning: Recursively scans your music directory for .mp3, .flac, .m4a, and .ogg files.
+## Core Features
 
-Intelligent Resume: Scans can be stopped and will resume from the last file processed.
+### Library Scanning
+- Recursively scans your music directory for `.mp3`, `.flac`, `.m4a`, and `.ogg` files.
+- **Intelligent Resume:** Stop and resume scans from the last file processed.
+- **File Hashing:** Generates and stores SHA256 hashes in `.musicwatcher/directory-hash.json`.
 
-File Hashing: Generates and stores SHA256 hashes for all files in .musicwatcher/directory-hash.json within your music library.
+### Categorized View
+- Displays your library by **Artist** and **Album**.
+- Shows counts of synced (`.lrc`) and plain (`.txt`) lyrics per album.
 
-Categorized View: Displays your library in a tree view, categorized by Artist and Album.
+### MusicBrainz Integration
+- Secure OAuth2 login (no manual token pasting).
+- Fetches new album/EP releases for artists in your library.
+- Saves known releases to `known_releases.json` to avoid duplicates.
+- Displays new releases in a dedicated panel—double-click to open the MusicBrainz page.
 
-Lyrics Status: The library view shows counts of synced (.lrc) and plain (.txt) lyrics for each album.
+### P2P Integration
+- Auto-detects **Nicotine+** and **Soulseek** on Linux and Windows.
+- Supports manual path configuration for other clients.
+- **Auto-Search:** Automatically queries supported clients (currently Nicotine+).
 
-MusicBrainz Integration:
+### Lyric Fetching Framework
+- Fetches missing lyrics, prioritizing synced `.lrc` files.
+- Overwrites plain `.txt` lyrics if a synced version is found.
+> **Note:** The lyric fetching logic is a placeholder and must be implemented in the `LyricFetcher` class.
 
-Secure OAuth2 login (no manual token pasting).
+---
 
-Fetches new Album/EP releases for all artists found in your library.
+## First-Time Setup
 
-Saves known releases to known_releases.json to prevent duplicates.
+### Step 1: Register a MusicBrainz Application
+1. Visit [https://musicbrainz.org/account/applications](https://musicbrainz.org/account/applications).
+2. Click **Register your application**.
+3. Fill out the form:
+   - **Name:** `MusicWatcher`
+   - **Type:** `Installed Application`
+   - **Redirect URI:** `http://localhost:9090/oauth_callback`
+4. Click **Register** and copy your **Client ID** and **Client Secret**.
 
-New Release Panel: New releases are displayed in a separate panel with Artist, Title, and Date. Double-clicking a release opens its MusicBrainz page.
+### Step 2: Configure MusicWatcher
+1. Launch MusicWatcher for the first time (see [Installation](#installation--running)).
+2. Select your main music library folder when prompted.
+3. Click **Set MB Credentials** and paste your Client ID/Secret.
+4. Click **Save**.
 
-P2P Integration:
+### Step 3: Log In
+1. Click **Login to MusicBrainz**.
+2. Approve access in your browser.
+3. You should see `Login Successful!` at `localhost:9090`.
+4. Close the tab and return to MusicWatcher.
 
-Auto-detects Nicotine+ and Soulseek on Linux and Windows.
+---
 
-Allows setting a manual path to any P2P client executable.
+## Installation & Running
 
-Auto-Search: Automatically sends new releases as search queries to detected P2P clients (currently supports Nicotine+).
-
-Lyric Fetching: A framework to fetch missing lyrics. It prioritizes synced .lrc files and will overwrite plain .txt files if a synced version is found.
-
-Note: The actual web-scraping logic is a placeholder and must be implemented in the LyricFetcher class.
-
-!! CRITICAL: First-Time Setup !!
-
-You must follow these steps to use the MusicBrainz integration.
-
-Step 1: Register a MusicBrainz Application
-
-Go to https://musicbrainz.org/account/applications and log in.
-
-Click "Register your application".
-
-Fill out the form:
-
-Name: MusicWatcher (or anything you like).
-
-Type: "Installed Application".
-
-Redirect URI: This is the most important part. You MUST use:
-
-http://localhost:9090/oauth_callback
-
-
-Agree to the terms and click "Register".
-
-On the next page, you will see your Client ID and Client Secret. Keep this window open.
-
-Step 2: Configure MusicWatcher
-
-Run MusicWatcher for the first time (see installation steps below).
-
-On first launch, the app will ask you to select your music directory. Choose your main music library folder.
-
-In the main window, click the "Set MB Credentials" button.
-
-A dialog will pop up. Copy and paste your Client ID and Client Secret from the MusicBrainz website into these fields.
-
-Click "Save".
-
-Step 3: Log In
-
-Click the "Login to MusicBrainz" button.
-
-Your default web browser will open to the MusicBrainz authorization page.
-
-Click "Allow access".
-
-Your browser will be redirected to a localhost:9090 page. You may see a "Login Successful!" message.
-
-You can close the browser tab and return to MusicWatcher. The app is now authenticated.
-
-Installation & Running
-
-On Linux (Recommended)
-
-The included shell script handles everything for you.
-
-Make the script executable:
-
+### Linux (Recommended)
+```bash
 chmod +x install_and_run_musicwatcher.sh
-
-
-Run the script:
-
 ./install_and_run_musicwatcher.sh
+```
+This script:
+- Creates a virtual environment (`venv/`)
+- Installs dependencies from `requirements.txt`
+- Launches the app
 
+### Windows / Manual Setup
+1. Install **Python 3.10+**.
+2. Create a virtual environment:
+   ```bash
+   python3 -m venv venv
+   ```
+3. Activate it:
+   - CMD: `venv\Scripts\activate`
+   - PowerShell: `./venv/Scripts/Activate.ps1`
+   - macOS/Linux: `source venv/bin/activate`
+4. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+5. Run the app:
+   ```bash
+   python3 musicwatcher.py
+   ```
 
-This script automatically creates a Python virtual environment (venv/), activates it, installs all required packages from requirements.txt, and launches the application.
+---
 
-On Windows / Manual Setup
+## Requirements
 
-Make sure you have Python 3.10 or newer installed.
-
-Create a virtual environment:
-
-python3 -m venv venv
-
-
-Activate the environment:
-
-Windows (CMD): venv\Scripts\activate
-
-PowerShell: .\venv\Scripts\Activate.ps1
-
-macOS/Linux: source venv/bin/activate
-
-Install the required packages:
-
+```bash
 pip install -r requirements.txt
+```
+- PyQt6
+- requests
+- requests-oauthlib
+- musicbrainzngs
+- mutagen
 
+---
 
-Run the application:
+## How to Use
 
-python3 musicwatcher.py
+### 1. Scan Your Library
+- Click **Start Scan**.
+- Progress bar shows completion.
+- Artist/Album tree populates.
+- Click **Stop Scan** to pause—resumes automatically.
 
+### 2. Fetch Lyrics (Optional)
+- Click **Fetch Missing Lyrics** after scanning.
+- Prioritizes synced `.lrc` files.
 
-Requirements
+### 3. Find New Releases
+- Click **Fetch New Releases**.
+- Queries MusicBrainz for your artists.
+- Displays albums/EPs in the **New Releases** panel.
 
-The application requires the following Python packages (which install_and_run_musicwatcher.sh or pip install -r requirements.txt will install):
+### 4. Download or Search
+- Double-click a release to open it on MusicBrainz.
+- Auto-searches via your configured P2P client.
 
-PyQt6
+---
 
-requests
+## Configuration Files
 
-requests-oauthlib
+| File | Purpose |
+|------|----------|
+| `.musicwatcher/directory-hash.json` | Stores SHA256 file hashes |
+| `known_releases.json` | Prevents duplicate release notifications |
+| `musicwatcher_config.json` | Stores user and P2P settings |
 
-musicbrainzngs
+---
 
-mutagen
+## Notes
 
-How to Use
+- **Active development:** features may change.
+- Lyric fetching framework pending full implementation.
+- Feedback, issues, and PRs are welcome.
 
-Scan Your Library:
+---
 
-Click "Start Scan". The app will scan your music directory, generate hashes, and read tags.
+## License
 
-The progress bar will show completion.
+Released under the **MIT License**.  
+See [`LICENSE`](LICENSE) for details.
 
-Your library will populate the "Artist / Album" tree. You can see file errors (missing tags) or lyric status.
+---
 
-You can click "Stop Scan" at any time. The app will save your position. Clicking "Start Scan" again will resume where you left off.
+## Acknowledgements
 
-(Optional) Fetch Lyrics:
+- [MusicBrainz](https://musicbrainz.org)
+- [Nicotine+](https://nicotine-plus.org/)
+- [Soulseek](https://www.slsknet.org/)
+- Python open-source community
 
-Once a scan is complete, click "Fetch Missing Lyrics".
+---
 
-The app will (in the future) search for lyrics for all scanned tracks, prioritizing .lrc files.
+> “Where words fail, music speaks.” — Hans Christian Andersen
 
-Find New Releases:
-
-After a scan, click "Fetch New Releases".
-
-The app will first search MusicBrainz for all your unique artist IDs. This may take time (it respects the 1-second/request API limit). You will see "Found on MB" or "Not Found on MB" in the "Status" column.
-
-Once all artists are identified, it queries for new albums and EPs.
-
-New releases appear in the "New Releases" panel at the bottom.
-
-Download New Music:
-
-Double-click any release in the "New Releases" panel to open its MusicBrainz page in your browser.
-
-If Auto-Search is enabled (in musicwatcher_config.json) and you have a supported P2P client (like Nicotine+), the app will automatically run a search for that release (Artist Album).
-
-You can also click "Launch P2P Client" to open your client manually. If no client is found, click "Set P2P Client Path" to select the .exe or executable file manually.
