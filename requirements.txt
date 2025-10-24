@@ -1,0 +1,6 @@
+PyQt6
+requests
+requests-oauthlib
+musicbrainzngs
+mutagen
+beautifulsoup4
